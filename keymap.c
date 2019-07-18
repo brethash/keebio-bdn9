@@ -53,6 +53,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 enum custom_keycodes {
   QMKBEST = SAFE_RANGE,
+  AEM_START_AUTHOR,
+  AEM_START_PUBLISH,
+  MVN_BUILD_AEM_AUTHOR,
+  MVN_BUILD_AEM_PUBLISH
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
