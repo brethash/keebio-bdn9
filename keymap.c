@@ -1,4 +1,4 @@
-/* Copyright 2019 Danny Nguyen <danny@keeb.io>
+/* Copyright 2019 Bret Hash (brethash.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,13 @@
  */
 #include QMK_KEYBOARD_H
 
+enum custom_keycodes {
+  AEM_START_AUTHOR,
+  AEM_START_PUBLISH,
+  MVN_BUILD_AEM_AUTHOR,
+  MVN_BUILD_AEM_PUBLISH
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
         | Knob 1: Vol Dn/Up |      | Knob 2: Page Dn/Up |
@@ -23,8 +30,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         | Git push current branch? | Git pull | Git fetch              |
      */
     [0] = LAYOUT(
-        KC_MUTE, QMKBEST, BL_TOGG,
-        MO(1)  , KC_UP  , AEM_START_AUTHOR,
+        KC_MUTE, MO(1), BL_TOGG,
+        BL_STEP  , KC_UP , AEM_START_AUTHOR,
         KC_LEFT, KC_DOWN, KC_RGHT
     ),
     /*
@@ -33,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         | Maven Build AEM Author | Maven Build AEM Publish  | Maven run tests? |
      */
     [1] = LAYOUT(
-        RESET  , ______, , MO(2)
+        RESET  , _______, MO(2),
         AEM_START_AUTHOR, AEM_START_PUBLISH, RGB_MOD,
         MVN_BUILD_AEM_AUTHOR, MVN_BUILD_AEM_PUBLISH , KC_MNXT
     ),
@@ -43,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         | Media Previous | End  | Media Next |
      */
     [2] = LAYOUT(
-        RESET  , ______, ______,
+        RESET  , _______, _______,
         BL_STEP, BL_TOGG, RGB_MOD,
         KC_MPRV, KC_END , KC_MNXT
     ),
@@ -51,24 +58,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Maybe add a layer for npm/grunt/gulp commands?
 };
 
-enum custom_keycodes {
-  QMKBEST = SAFE_RANGE,
-  AEM_START_AUTHOR,
-  AEM_START_PUBLISH,
-  MVN_BUILD_AEM_AUTHOR,
-  MVN_BUILD_AEM_PUBLISH
-};
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case QMKBEST:
-      if (record->event.pressed) {
-        // when keycode QMKBEST is pressed
-        SEND_STRING("QMK is the best thing ever!");
-      } else {
-        // when keycode QMKBEST is released
-      }
-      break;
 
     case AEM_START_AUTHOR:
       // Start AEM Author instance with debugging
@@ -125,4 +116,3 @@ void encoder_update_user(uint8_t index, bool clockwise) {
             tap_code(KC_VOLD);
         }
     }
-}
