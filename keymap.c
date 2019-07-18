@@ -19,22 +19,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
         | Knob 1: Vol Dn/Up |      | Knob 2: Page Dn/Up |
         | Press: Mute       | Home | Press: Play/Pause  |
-        | Hold: Layer 2     | Up   | RGB Mode           |
+        | Hold: Layer 1     | Up   | RGB Mode           |
         | Left              | Down | Right              |
      */
     [0] = LAYOUT(
         KC_MUTE, QMKBEST, BL_TOGG,
-        MO(1)  , KC_UP  , RGB_MOD,
+        MO(1)  , KC_UP  , AEM_START_AUTHOR,
         KC_LEFT, KC_DOWN, KC_RGHT
     ),
     /*
-        | RESET          | N/A  | Media Stop |
-        | Held: Layer 2  | Home | RGB Mode   |
+        | RESET          | Held: Layer 1 | Hold: Layer 2 |
+        | Start AEM Author | Start AEM Author | RGB Mode   |
         | Media Previous | End  | Media Next |
      */
     [1] = LAYOUT(
-        RESET  , BL_STEP, BL_TOGG,
-        _______, KC_HOME, RGB_MOD,
+        RESET  , ______, , MO(2)
+        AEM_START_AUTHOR, BL_TOGG, RGB_MOD,
+        KC_MPRV, KC_END , KC_MNXT
+    ),
+    /*
+        | RESET          | Held: Layer 1 | Hold: Layer 2 |
+        || Backlight Step | Backlight Toggle | RGB Mode   |
+        | Media Previous | End  | Media Next |
+     */
+    [2] = LAYOUT(
+        RESET  , ______, ______,
+        BL_STEP, BL_TOGG, RGB_MOD,
         KC_MPRV, KC_END , KC_MNXT
     ),
 };
@@ -54,6 +64,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
+    case AEM_START_AUTHOR:
+      // Start AEM Author instance with debugging
+      if (record->event.pressed) {
+        // when keycode QMKBEST is pressed
+        SEND_STRING("blah blah blah" SS_TAP(X_ENTER));
+        backlight_toggle();
+      } else {
+        backlight_toggle();
+      }
+      break;
+
   }
   return true;
 };
@@ -66,11 +87,4 @@ void encoder_update_user(uint8_t index, bool clockwise) {
             tap_code(KC_VOLD);
         }
     }
-    // else if (index == 1) {
-    //     if (clockwise) {
-    //         tap_code(KC_PGDN);
-    //     } else {
-    //         tap_code(KC_PGUP);
-    //     }
-    // }
 }
