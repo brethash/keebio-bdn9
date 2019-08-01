@@ -18,6 +18,7 @@
 enum custom_keycodes {
   AEM_START_AUTHOR,
   AEM_START_PUBLISH,
+  GIT_PUSH_CUR_BRANCH,
   MVN_BUILD_AEM_AUTHOR,
   MVN_BUILD_AEM_PUBLISH
 };
@@ -80,6 +81,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         backlight_toggle();
       } else {
         backlight_toggle();
+      }
+      break;
+
+    case GIT_PUSH_CUR_BRANCH:
+      // Pushes the current branch to origin
+      if (record->event.pressed) {
+	SEND_STRING("git push origin $(git branch | grep \\* | cut -d ' ' -f2)" SS_TAP(X_ENTER));
+      } else {
+	backlight_toggle();
       }
       break;
 
